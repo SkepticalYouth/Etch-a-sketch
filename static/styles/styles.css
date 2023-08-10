@@ -1,0 +1,10 @@
+@font-face {
+    font-family: 'Pixeloid';
+    src: url('../font/PixeloidMono-d94EV.ttf') format('truetype');
+    /* You can add more formats here for browser compatibility */
+  }
+
+.header>h1{
+    text-align: center;
+    font-family: 'Pixeloid';
+}
