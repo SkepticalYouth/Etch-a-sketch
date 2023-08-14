@@ -86,7 +86,7 @@ const penButton = document.getElementById('pen')
 const canvas = document.querySelectorAll('.etchBlock') 
 
 function pen(){
-    grid.style.cursor = "url('static/icons/pen_337127.png'), pointer"
+    grid.style.cursor = "url('static/icons/Pictogrammers-Material-Light-Pencil.16.png'), pointer"
     let isDrawing = false
     function draw(){
         canvas.forEach(block => {
@@ -108,7 +108,23 @@ function pen(){
 }
 
 function erase(){
+    let eraserOn = false
     grid.style.cursor = "url('static/icons/draw-eraser-icon.png'), pointer"
+    canvas.forEach(block => {
+        block.addEventListener('mousedown',function(){
+            eraserOn = true
+            block.style.backgroundColor = 'white'
+        })
+        block.addEventListener('mousemove',function(){
+            if (eraserOn){
+                block.style.backgroundColor = 'white'
+            }
+        })
+        block.addEventListener('mouseup',function(){
+            eraserOn = false
+        })
+    });
+
 }
 
 function setInitial(){
