@@ -87,10 +87,20 @@ const canvas = document.querySelectorAll('.etchBlock')
 
 function pen(){
     grid.style.cursor = "url('static/icons/pen_337127.png'), pointer"
+    let isDrawing = false
     function draw(){
         canvas.forEach(block => {
          block.addEventListener('mousedown', function(){
-             block.style.backgroundColor = 'black'
+            isDrawing = true
+            block.style.backgroundColor = 'black'
+         })
+         block.addEventListener('mousemove', function(){
+            if (isDrawing){
+                block.style.backgroundColor = 'black'
+            }
+         })
+         block.addEventListener('mouseup', function(){
+            isDrawing = false
          })
         });
     }
