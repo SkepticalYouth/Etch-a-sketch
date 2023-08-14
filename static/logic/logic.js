@@ -82,6 +82,32 @@ reset.style.margin="10px"
 
 buttonMenu.append(togglePen, toggleColor, eraser, reset)
 
-function pen(){
+const penButton = document.getElementById('pen')
+const canvas = document.querySelectorAll('.etchBlock') 
 
+function pen(){
+    grid.style.cursor = "url('static/icons/pen_337127.png'), pointer"
+    function draw(){
+        canvas.forEach(block => {
+         block.addEventListener('mousedown', function(){
+             block.style.backgroundColor = 'black'
+         })
+        });
+    }
+    draw()
 }
+
+function erase(){
+    grid.style.cursor = "url('static/icons/draw-eraser-icon.png'), pointer"
+}
+
+function setInitial(){
+    grid.style.cursor = "auto"
+    canvas.forEach(block => {
+        block.style.backgroundColor='white'
+    });
+}
+
+penButton.addEventListener('mousedown',pen)
+eraser.addEventListener('click',erase)
+reset.addEventListener('click',setInitial)
