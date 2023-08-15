@@ -1,12 +1,40 @@
+//styling the container 
 const flexbox = document.createElement('div')
 flexbox.classList.add("flex-grid")
-
-//styling the container 
 flexboxStyle = flexbox.style
 flexboxStyle.backgroundColor="#F5F5F5"
 flexboxStyle.display="flex"
 flexboxStyle.justifyContent="center"
+flexboxStyle.flexDirection = 'column'
+flexboxStyle.alignItems = 'center'
 document.body.appendChild(flexbox)
+
+//Styling the slider
+const sliderContainer = document.createElement('div')
+sliderContainer.classList.add('slider-container')
+sliderStyle = sliderContainer.style
+sliderStyle.display="flex"
+sliderStyle.justifyContent="center"
+sliderStyle.alignItems = "center"
+sliderStyle.marginBottom = '20px'
+sliderStyle.flexDirection = 'column'
+flexbox.appendChild(sliderContainer)
+
+//Create a label for the slider
+const sliderLabel = document.createElement('label')
+sliderLabel.textContent = "Grid size"
+sliderContainer.appendChild(sliderLabel)
+
+//Styling the range slider
+const rangeSlider = document.createElement('input');
+rangeSlider.type = 'range';
+rangeSlider.min = '0';
+rangeSlider.max = '100';
+rangeSlider.value = '16'
+rangeSlider.step = '1'
+rangeSlider.name = 'slider-size'
+rangeSlider.id = 'size'
+sliderContainer.appendChild(rangeSlider)
 
 //Styling the grid and nest it inside the flexbox
 const grid = document.createElement('div')
@@ -24,20 +52,24 @@ gridStyle.flexWrap = 'wrap'
 flexbox.appendChild(grid)
 
 //Styling the inside of .grid
-let i = 0
-while (i<256){
-    const miniBox = document.createElement('div')
-    miniBoxStyle = miniBox.style
-    miniBoxStyle.width = '30px'
-    miniBoxStyle.height = '30px'
-    miniBoxStyle.border = 'none'
-    miniBox.classList.add('etchBlock')
-    // miniBoxStyle.borderCollapse = 'collapse'
-    grid.appendChild(miniBox)
-    i +=1  
+
+
+function updateSlider(){
+    grid.innerHTML = '';
+    let i = 0
+    let dim = parseInt(document.getElementById('size').value)
+    while (i< dim**2){
+        const miniBox = document.createElement('div')
+        miniBoxStyle = miniBox.style
+        miniBoxStyle.width = 480/dim + 'px'
+        miniBoxStyle.height = 480/dim + 'px'
+        miniBoxStyle.border = 'none'
+        miniBox.classList.add('etchBlock')
+        // miniBoxStyle.borderCollapse = 'collapse'
+        grid.appendChild(miniBox)
+        i +=1  
 }
-
-
+}
 
 //Button menu
 const buttonMenu = document.createElement('div')
@@ -169,6 +201,7 @@ function setInitial(){
     eraserOn = false
 }
 
+rangeSlider.addEventListener('input',updateSlider)
 penButton.addEventListener('click',pen)
 eraser.addEventListener('click',erase)
 reset.addEventListener('click',setInitial)
