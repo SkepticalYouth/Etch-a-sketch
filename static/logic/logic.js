@@ -85,22 +85,56 @@ buttonMenu.append(togglePen, toggleColor, eraser, reset)
 const penButton = document.getElementById('pen')
 const canvas = document.querySelectorAll('.etchBlock') 
 
+let isDrawing = false
+let eraserOn = false
+
+function drawMouseDown(Event){
+    isDrawing = true
+    const block = Event.target; // Get the specific block that was clicked
+    block.style.backgroundColor = 'black';
+}
+
+function drawMouseMove(Event){
+    if (isDrawing){
+        const block = Event.target
+        block.style.backgroundColor = 'black' 
+    }
+}
+
+function drawMouseUp(){
+    isDrawing = false
+}
+
+function eraserMouseDown(Event){
+    eraserOn = true
+    const block = Event.target
+    block.style.backgroundColor = 'white'
+}
+
+function eraserMouseMove(Event){
+    if (eraserOn){
+        const block = Event.target
+        block.style.backgroundColor = 'white'
+    }
+}
+
+function eraserMouseUp(){
+    eraserOn = false
+}
+
 function pen(){
     grid.style.cursor = "url('static/icons/Pictogrammers-Material-Light-Pencil.16.png'), pointer"
-    let isDrawing = false
     function draw(){
         canvas.forEach(block => {
-         block.addEventListener('mousedown', function(){
-            isDrawing = true
-            block.style.backgroundColor = 'black'
-         })
-         block.addEventListener('mousemove', function(){
-            if (isDrawing){
-                block.style.backgroundColor = 'black'
-            }
-         })
-         block.addEventListener('mouseup', function(){
-            isDrawing = false
+         block.addEventListener('mousedown', drawMouseDown)
+         block.addEventListener('mousemove', drawMouseMove)
+         block.addEventListener('mouseup', drawMouseUp)
+         reset.addEventListener('click', function(){
+            canvas.forEach(block => {
+                block.removeEventListener('mousedown', drawMouseDown)
+                block.removeEventListener('mouseup', drawMouseUp)
+                block.removeEventListener('mousemove', drawMouseMove)
+            })
          })
         });
     }
@@ -108,23 +142,22 @@ function pen(){
 }
 
 function erase(){
-    let eraserOn = false
     grid.style.cursor = "url('static/icons/draw-eraser-icon.png'), pointer"
-    canvas.forEach(block => {
-        block.addEventListener('mousedown',function(){
-            eraserOn = true
-            block.style.backgroundColor = 'white'
-        })
-        block.addEventListener('mousemove',function(){
-            if (eraserOn){
-                block.style.backgroundColor = 'white'
-            }
-        })
-        block.addEventListener('mouseup',function(){
-            eraserOn = false
-        })
-    });
-
+    function erase(){
+        canvas.forEach(block => {
+            block.addEventListener('mousedown', eraserMouseDown)
+            block.addEventListener('mousemove',eraserMouseMove)
+            block.addEventListener('mouseup', eraserMouseUp)
+            reset.addEventListener('click', function(){
+                canvas.forEach(block => {
+                    block.removeEventListener('mousedown', eraserMouseDown)
+                    block.removeEventListener('mousemove', eraserMouseMove)
+                    block.removeEventListener('mouseup', eraserMouseUp)
+                });
+            })
+        });   
+    }
+    erase()
 }
 
 function setInitial(){
@@ -132,8 +165,10 @@ function setInitial(){
     canvas.forEach(block => {
         block.style.backgroundColor='white'
     });
+    isDrawing = false
+    eraserOn = false
 }
 
-penButton.addEventListener('mousedown',pen)
+penButton.addEventListener('click',pen)
 eraser.addEventListener('click',erase)
 reset.addEventListener('click',setInitial)
