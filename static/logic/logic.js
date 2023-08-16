@@ -28,13 +28,17 @@ sliderContainer.appendChild(sliderLabel)
 //Styling the range slider
 const rangeSlider = document.createElement('input');
 rangeSlider.type = 'range';
-rangeSlider.min = '0';
-rangeSlider.max = '100';
+rangeSlider.min = '1';
+rangeSlider.max = '64';
 rangeSlider.value = '16'
 rangeSlider.step = '1'
 rangeSlider.name = 'slider-size'
 rangeSlider.id = 'size'
 sliderContainer.appendChild(rangeSlider)
+
+const sizeTip = document.createElement('div')
+sizeTip.id = "tooltip"
+sliderContainer.appendChild(sizeTip)
 
 //Styling the grid and nest it inside the flexbox
 const grid = document.createElement('div')
@@ -52,7 +56,8 @@ gridStyle.flexWrap = 'wrap'
 flexbox.appendChild(grid)
 
 //Styling the inside of .grid
-
+let isDrawing = false
+let eraserOn = false
 
 function updateSlider(){
     grid.innerHTML = '';
@@ -65,11 +70,29 @@ function updateSlider(){
         miniBoxStyle.height = 480/dim + 'px'
         miniBoxStyle.border = 'none'
         miniBox.classList.add('etchBlock')
-        // miniBoxStyle.borderCollapse = 'collapse'
         grid.appendChild(miniBox)
         i +=1  
+    }
+    canvas = document.querySelectorAll('.etchBlock')
 }
+ 
+
+function initializeGrid(){
+    let i = 0
+    let dim = parseInt(document.getElementById('size').value)
+    while (i <dim**2){
+        const miniBox = document.createElement('div')
+        miniBoxStyle = miniBox.style
+        miniBoxStyle.width = 480/dim + 'px'
+        miniBoxStyle.height = 480/dim + 'px'
+        miniBoxStyle.border = 'none'
+        miniBox.classList.add('etchBlock')
+        grid.appendChild(miniBox)
+        i +=1  
+    }
 }
+initializeGrid()
+
 
 //Button menu
 const buttonMenu = document.createElement('div')
@@ -84,41 +107,31 @@ document.body.appendChild(buttonMenu)
 //Buttons
 const togglePen = document.createElement('button')
 togglePen.innerText="Toggle pen"
-// togglePen.classList.add("common")
 togglePen.id= 'pen'
 togglePen.style.margin="10px"
 
 const toggleColor = document.createElement('button')
 toggleColor.innerText = 'Toggle color'
-// toggleColor.classList.add("common")
 toggleColor.id = 'color'
 toggleColor.style.margin="10px"
 
 const eraser = document.createElement('button')
 eraser.innerText = 'Eraser'
-// eraser.classList.add("common")
 eraser.id='eraser'
 eraser.style.margin="10px"
 
 const reset = document.createElement('button')
 reset.innerText = 'Reset'
 reset.id = 'reset'
-// reset.classList.add("common")
 reset.style.margin="10px"
-
-//Styling the buttons
-// buttons = document.querySelectorAll(".common")
-// buttons.forEach(button => {
-//     button.style.margin = '10px'
-// });
 
 buttonMenu.append(togglePen, toggleColor, eraser, reset)
 
+//logic for pen & eraser
 const penButton = document.getElementById('pen')
-const canvas = document.querySelectorAll('.etchBlock') 
+let canvas = document.querySelectorAll('.etchBlock') 
 
-let isDrawing = false
-let eraserOn = false
+
 
 function drawMouseDown(Event){
     isDrawing = true
@@ -162,6 +175,15 @@ function pen(){
          block.addEventListener('mousemove', drawMouseMove)
          block.addEventListener('mouseup', drawMouseUp)
          reset.addEventListener('click', function(){
+            isDrawing = false
+            canvas.forEach(block => {
+                block.removeEventListener('mousedown', drawMouseDown)
+                block.removeEventListener('mouseup', drawMouseUp)
+                block.removeEventListener('mousemove', drawMouseMove)
+            })
+         })
+         eraser.addEventListener('click', function(){
+            isDrawing = false
             canvas.forEach(block => {
                 block.removeEventListener('mousedown', drawMouseDown)
                 block.removeEventListener('mouseup', drawMouseUp)
@@ -175,12 +197,21 @@ function pen(){
 
 function erase(){
     grid.style.cursor = "url('static/icons/draw-eraser-icon.png'), pointer"
-    function erase(){
+    function eraseBlock(){
         canvas.forEach(block => {
             block.addEventListener('mousedown', eraserMouseDown)
             block.addEventListener('mousemove',eraserMouseMove)
             block.addEventListener('mouseup', eraserMouseUp)
             reset.addEventListener('click', function(){
+                eraserOn = false
+                canvas.forEach(block => {
+                    block.removeEventListener('mousedown', eraserMouseDown)
+                    block.removeEventListener('mousemove', eraserMouseMove)
+                    block.removeEventListener('mouseup', eraserMouseUp)
+                });
+            })
+            penButton.addEventListener('click', function(){
+                eraserOn = false
                 canvas.forEach(block => {
                     block.removeEventListener('mousedown', eraserMouseDown)
                     block.removeEventListener('mousemove', eraserMouseMove)
@@ -189,19 +220,33 @@ function erase(){
             })
         });   
     }
-    erase()
+    eraseBlock()
 }
 
 function setInitial(){
     grid.style.cursor = "auto"
-    canvas.forEach(block => {
-        block.style.backgroundColor='white'
-    });
+    gridStyle.backgroundColor = 'white'
+    rangeSlider.value = '16';
+    rangeSlider.dispatchEvent(new Event('input'));
     isDrawing = false
     eraserOn = false
 }
 
-rangeSlider.addEventListener('input',updateSlider)
+rangeSlider.addEventListener('input', updateSlider)
 penButton.addEventListener('click',pen)
 eraser.addEventListener('click',erase)
 reset.addEventListener('click',setInitial)
+
+rangeSlider.addEventListener('input', (event) => {
+    sizeTip.textContent = event.target.value; // Update the tooltip content
+});
+
+rangeSlider.addEventListener('mouseover', (event) => {
+    sizeTip.style.visibility = 'visible';
+    sizeTip.style.opacity = '1';
+});
+
+rangeSlider.addEventListener('mouseout', () => {
+    sizeTip.style.visibility = 'hidden';
+    sizeTip.style.opacity = '0';
+});
