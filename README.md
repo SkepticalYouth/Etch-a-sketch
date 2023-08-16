@@ -1,5 +1,5 @@
 # Etch-a-sketch
-My etch-a-sket project, which is a part of the Odin project foundation curriculum.
+My Etch-a-Sketch project, which is a part of the Odin project foundation curriculum.
 
 Functionalities:
 
