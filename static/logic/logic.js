@@ -55,45 +55,6 @@ gridStyle.flexDirection = "row"
 gridStyle.flexWrap = 'wrap'
 flexbox.appendChild(grid)
 
-//Styling the inside of .grid
-let isDrawing = false
-let eraserOn = false
-
-function updateSlider(){
-    grid.innerHTML = '';
-    let i = 0
-    let dim = parseInt(document.getElementById('size').value)
-    while (i< dim**2){
-        const miniBox = document.createElement('div')
-        miniBoxStyle = miniBox.style
-        miniBoxStyle.width = 480/dim + 'px'
-        miniBoxStyle.height = 480/dim + 'px'
-        miniBoxStyle.border = 'none'
-        miniBox.classList.add('etchBlock')
-        grid.appendChild(miniBox)
-        i +=1  
-    }
-    canvas = document.querySelectorAll('.etchBlock')
-}
- 
-
-function initializeGrid(){
-    let i = 0
-    let dim = parseInt(document.getElementById('size').value)
-    while (i <dim**2){
-        const miniBox = document.createElement('div')
-        miniBoxStyle = miniBox.style
-        miniBoxStyle.width = 480/dim + 'px'
-        miniBoxStyle.height = 480/dim + 'px'
-        miniBoxStyle.border = 'none'
-        miniBox.classList.add('etchBlock')
-        grid.appendChild(miniBox)
-        i +=1  
-    }
-}
-initializeGrid()
-
-
 //Button menu
 const buttonMenu = document.createElement('div')
 buttonMenu.classList.add('menu')
@@ -127,6 +88,69 @@ reset.style.margin="10px"
 
 buttonMenu.append(togglePen, toggleColor, eraser, reset)
 
+//Footer
+const footer = document.createElement('div')
+footerStyle = footer.style
+footerStyle.display = "flex"
+footerStyle.justifyContent = 'center'
+document.body.appendChild(footer)
+
+const footerText = document.createElement('p')
+footerText.innerText= 'Copyright © Carl Warren 2023'
+footer.appendChild(footerText)
+
+// Create an <a> element for the GitHub logo link
+const githubLink = document.createElement('a')
+githubLink.href = 'https://github.com/SkepticalYouth'
+githubLink.classList.add('github-link')
+footer.appendChild(githubLink);
+githubLink.style.display = 'flex'
+githubLink.style.alignItems = 'center'
+githubLink.style.paddingLeft = '10px'
+
+// Create an <i> element for the GitHub logo using Font Awesome icon classes
+const githubIcon = document.createElement('i');
+githubIcon.classList.add('fab', 'fa-github'); 
+githubLink.appendChild(githubIcon);
+
+//Set slider logic
+let isDrawing = false
+let eraserOn = false
+
+function updateSlider(){
+    grid.innerHTML = '';
+    let i = 0
+    let dim = parseInt(document.getElementById('size').value)
+    while (i< dim**2){
+        const miniBox = document.createElement('div')
+        miniBoxStyle = miniBox.style
+        miniBoxStyle.width = 480/dim + 'px'
+        miniBoxStyle.height = 480/dim + 'px'
+        miniBoxStyle.border = 'none'
+        miniBox.classList.add('etchBlock')
+        grid.appendChild(miniBox)
+        i +=1  
+    }
+    canvas = document.querySelectorAll('.etchBlock')
+}
+ 
+//Initialize the grid upon loading page
+function initializeGrid(){
+    let i = 0
+    let dim = parseInt(document.getElementById('size').value)
+    while (i <dim**2){
+        const miniBox = document.createElement('div')
+        miniBoxStyle = miniBox.style
+        miniBoxStyle.width = 480/dim + 'px'
+        miniBoxStyle.height = 480/dim + 'px'
+        miniBoxStyle.border = 'none'
+        miniBox.classList.add('etchBlock')
+        grid.appendChild(miniBox)
+        i +=1  
+    }
+}
+initializeGrid()
+
 //logic for pen & eraser
 const penButton = document.getElementById('pen')
 let canvas = document.querySelectorAll('.etchBlock') 
@@ -135,7 +159,7 @@ let canvas = document.querySelectorAll('.etchBlock')
 
 function drawMouseDown(Event){
     isDrawing = true
-    const block = Event.target; // Get the specific block that was clicked
+    const block = Event.target;
     block.style.backgroundColor = 'black';
 }
 
@@ -223,6 +247,7 @@ function erase(){
     eraseBlock()
 }
 
+//logic for reset
 function setInitial(){
     grid.style.cursor = "auto"
     gridStyle.backgroundColor = 'white'
@@ -237,8 +262,9 @@ penButton.addEventListener('click',pen)
 eraser.addEventListener('click',erase)
 reset.addEventListener('click',setInitial)
 
+//logic for rangeSlider
 rangeSlider.addEventListener('input', (event) => {
-    sizeTip.textContent = event.target.value; // Update the tooltip content
+    sizeTip.textContent = event.target.value;
 });
 
 rangeSlider.addEventListener('mouseover', (event) => {
