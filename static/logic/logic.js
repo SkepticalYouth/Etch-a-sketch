@@ -46,8 +46,8 @@ togglePen.innerText="Toggle pen"
 togglePen.id= 'pen'
 
 
-const toggleColor = document.createElement('button')
-toggleColor.innerText = 'Toggle color'
+const toggleColor = document.createElement('input')
+toggleColor.type = 'color'
 toggleColor.id = 'color'
 
 
@@ -125,19 +125,20 @@ initializeGrid()
 //logic for pen & eraser
 const penButton = document.getElementById('pen')
 let canvas = document.querySelectorAll('.etchBlock') 
+let penColor = document.getElementById('color').value
 
 
 
 function drawMouseDown(Event){
     isDrawing = true
     const block = Event.target;
-    block.style.backgroundColor = 'black';
+    block.style.backgroundColor = penColor;
 }
 
 function drawMouseMove(Event){
     if (isDrawing){
         const block = Event.target
-        block.style.backgroundColor = 'black' 
+        block.style.backgroundColor = penColor
     }
 }
 
@@ -237,6 +238,11 @@ function setInitial(){
     isDrawing = false
     eraserOn = false
 }
+
+//logic for toggling different colors
+document.getElementById('color').addEventListener('input', function chooseColor(){
+    penColor = document.getElementById('color').value
+})
 
 rangeSlider.addEventListener('input', updateSlider)
 penButton.addEventListener('click',pen)
