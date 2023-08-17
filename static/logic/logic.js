@@ -174,9 +174,9 @@ function drawMouseUp(){
     isDrawing = false
 }
 
-// function mouseOut(){
-//     isDrawing = false
-// }
+function drawMouseLeave(){
+    isDrawing = false
+}
 
 function eraserMouseDown(Event){
     eraserOn = true
@@ -192,6 +192,10 @@ function eraserMouseMove(Event){
 }
 
 function eraserMouseUp(){
+    eraserOn = false
+}
+
+function eraserMouseLeave(){
     eraserOn = false
 }
 
@@ -218,8 +222,8 @@ function pen(){
                 block.removeEventListener('mousemove', drawMouseMove)
             })
          })
-        //  grid.addEventListener('mouseout',mouseOut)
         });
+        grid.addEventListener('mouseleave',drawMouseLeave)
     }
     draw()
 }
@@ -247,7 +251,8 @@ function erase(){
                     block.removeEventListener('mouseup', eraserMouseUp)
                 });
             })
-        });   
+        });
+        grid.addEventListener('mouseleave',eraserMouseLeave)   
     }
     eraseBlock()
 }
