@@ -1,23 +1,11 @@
 //styling the container 
 const flexbox = document.createElement('div')
 flexbox.classList.add("flex-grid")
-flexboxStyle = flexbox.style
-flexboxStyle.backgroundColor="#F5F5F5"
-flexboxStyle.display="flex"
-flexboxStyle.justifyContent="center"
-flexboxStyle.flexDirection = 'column'
-flexboxStyle.alignItems = 'center'
 document.body.appendChild(flexbox)
 
 //Styling the slider
 const sliderContainer = document.createElement('div')
 sliderContainer.classList.add('slider-container')
-sliderStyle = sliderContainer.style
-sliderStyle.display="flex"
-sliderStyle.justifyContent="center"
-sliderStyle.alignItems = "center"
-sliderStyle.marginBottom = '20px'
-sliderStyle.flexDirection = 'column'
 flexbox.appendChild(sliderContainer)
 
 //Create a label for the slider
@@ -43,25 +31,12 @@ sliderContainer.appendChild(sizeTip)
 //Styling the grid and nest it inside the flexbox
 const grid = document.createElement('div')
 grid.classList.add("grid")
-gridStyle = grid.style
-gridStyle.display = "flex"
-gridStyle.width = "480px"
-gridStyle.height = "480px"
-gridStyle.backgroundColor = "white"
-gridStyle.borderCollapse = 'collapse'
-gridStyle.border="solid 1px" 
-gridStyle.overflow = "hidden"
-gridStyle.flexDirection = "row"
-gridStyle.flexWrap = 'wrap'
 flexbox.appendChild(grid)
 
 //Button menu
 const buttonMenu = document.createElement('div')
 buttonMenu.classList.add('menu')
 buttonMenuStyle = buttonMenu.style
-buttonMenuStyle.display = 'flex'
-buttonMenuStyle.flexDirection = 'row'
-buttonMenuStyle.justifyContent = 'center'
 document.body.appendChild(buttonMenu)
 
 
@@ -69,30 +44,29 @@ document.body.appendChild(buttonMenu)
 const togglePen = document.createElement('button')
 togglePen.innerText="Toggle pen"
 togglePen.id= 'pen'
-togglePen.style.margin="10px"
+
 
 const toggleColor = document.createElement('button')
 toggleColor.innerText = 'Toggle color'
 toggleColor.id = 'color'
-toggleColor.style.margin="10px"
+
 
 const eraser = document.createElement('button')
 eraser.innerText = 'Eraser'
 eraser.id='eraser'
-eraser.style.margin="10px"
+
 
 const reset = document.createElement('button')
 reset.innerText = 'Reset'
 reset.id = 'reset'
-reset.style.margin="10px"
+
 
 buttonMenu.append(togglePen, toggleColor, eraser, reset)
 
 //Footer
 const footer = document.createElement('div')
+footer.classList.add('footer')
 footerStyle = footer.style
-footerStyle.display = "flex"
-footerStyle.justifyContent = 'center'
 document.body.appendChild(footer)
 
 const footerText = document.createElement('p')
@@ -104,9 +78,6 @@ const githubLink = document.createElement('a')
 githubLink.href = 'https://github.com/SkepticalYouth'
 githubLink.classList.add('github-link')
 footer.appendChild(githubLink);
-githubLink.style.display = 'flex'
-githubLink.style.alignItems = 'center'
-githubLink.style.paddingLeft = '10px'
 
 // Create an <i> element for the GitHub logo using Font Awesome icon classes
 const githubIcon = document.createElement('i');
@@ -260,7 +231,7 @@ function erase(){
 //logic for reset
 function setInitial(){
     grid.style.cursor = "auto"
-    gridStyle.backgroundColor = 'white'
+    grid.style.backgroundColor = 'white'
     rangeSlider.value = '16';
     rangeSlider.dispatchEvent(new Event('input'));
     isDrawing = false

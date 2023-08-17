@@ -20,12 +20,57 @@
   transition: opacity 0.2s;
 }
 
-
-
 button, label, p{
   font-family: "Pixeloid";
 }
 
+.flex-grid{
+  display: flex;
+  background-color: #F5F5F5;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.slider-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.grid{
+  display: flex;
+  width: 480px;
+  height: 480px;
+  background-color: white;
+  border: solid 1px;
+  overflow: hidden;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.menu{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+#pen, #color, #eraser, #reset{
+  margin: 10px;
+}
+
+.footer{
+  display: flex;
+  justify-content: center;
+}
+
+.github-link{
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+}
 
 
 
