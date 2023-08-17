@@ -174,6 +174,10 @@ function drawMouseUp(){
     isDrawing = false
 }
 
+// function mouseOut(){
+//     isDrawing = false
+// }
+
 function eraserMouseDown(Event){
     eraserOn = true
     const block = Event.target
@@ -214,6 +218,7 @@ function pen(){
                 block.removeEventListener('mousemove', drawMouseMove)
             })
          })
+        //  grid.addEventListener('mouseout',mouseOut)
         });
     }
     draw()
@@ -261,6 +266,9 @@ rangeSlider.addEventListener('input', updateSlider)
 penButton.addEventListener('click',pen)
 eraser.addEventListener('click',erase)
 reset.addEventListener('click',setInitial)
+document.addEventListener("dragstart", event => {
+    event.preventDefault();
+});
 
 //logic for rangeSlider
 rangeSlider.addEventListener('input', (event) => {
