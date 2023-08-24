@@ -1,16 +1,16 @@
 # Etch-a-sketch
 My Etch-a-Sketch project, which is a part of the Odin project foundation curriculum.
 
-Functionalities:
+## Functionalities:
 
--Pen
+- [x] Pen
 
--Eraser
+- [x] Eraser
 
--Grid 
+- [x] Grid (64x64) 
 
--Slider (allows up to 64x64)
+- [x] Reset 
 
--Reset 
-
-Check the prototype branch for the main code, since I haven't figured out how to push from prototype to main
+## To-add:
+- [ ] Rainbow mode
+- [ ] Performance optimization for larger grid
