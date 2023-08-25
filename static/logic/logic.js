@@ -17,7 +17,7 @@ sliderContainer.appendChild(sliderLabel)
 const rangeSlider = document.createElement('input');
 rangeSlider.type = 'range';
 rangeSlider.min = '1';
-rangeSlider.max = '64';
+rangeSlider.max = '100';
 rangeSlider.value = '16'
 rangeSlider.step = '1'
 rangeSlider.name = 'slider-size'
@@ -60,8 +60,11 @@ const reset = document.createElement('button')
 reset.innerText = 'Reset'
 reset.id = 'reset'
 
+const rainbow = document.createElement('button')
+rainbow.innerText = 'Rainbow'
+rainbow.id = 'rainbow'
 
-buttonMenu.append(togglePen, toggleColor, eraser, reset)
+buttonMenu.append(togglePen, toggleColor, eraser, reset, rainbow)
 
 //Footer
 const footer = document.createElement('div')
@@ -85,8 +88,10 @@ githubIcon.classList.add('fab', 'fa-github');
 githubLink.appendChild(githubIcon);
 
 //Set slider logic
-let isDrawing = false
-let eraserOn = false
+// let isDrawing = false
+// let eraserOn = false
+let isMouseDown
+let drawMode
 
 function updateSlider(){
     grid.innerHTML = '';
@@ -127,106 +132,72 @@ const penButton = document.getElementById('pen')
 let canvas = document.querySelectorAll('.etchBlock') 
 let penColor = document.getElementById('color').value
 
-
-
-function drawMouseDown(Event){
-    isDrawing = true
-    const block = Event.target;
-    block.style.backgroundColor = penColor;
+//Testing function for draw
+function testDrawMouseDown(){
+    isMouseDown = true
 }
 
-function drawMouseMove(Event){
-    if (isDrawing){
-        const block = Event.target
-        block.style.backgroundColor = penColor
-    }
+function testDrawMouseUp(){
+    isMouseDown = false
 }
 
-function drawMouseUp(){
-    isDrawing = false
-}
-
-function drawMouseLeave(){
-    isDrawing = false
-}
-
-function eraserMouseDown(Event){
-    eraserOn = true
+function testDrawMouseMove(Event){
     const block = Event.target
-    block.style.backgroundColor = 'white'
+    if (isMouseDown === true){
+        block.style.backgroundColor = penColor
+    } 
 }
 
-function eraserMouseMove(Event){
-    if (eraserOn){
-        const block = Event.target
+function testRemoveDrawEventListener(){
+    grid.removeEventListener('mousedown', testDrawMouseDown)
+    window.removeEventListener('mouseup', testDrawMouseUp)
+    canvas.forEach(element => {
+        element.removeEventListener('mouseenter',testDrawMouseMove)
+    });
+}
+
+//Testing function for eraser
+function testEraserMouseDown(Event){
+    const block = Event.target
+    if (isMouseDown === true){
         block.style.backgroundColor = 'white'
     }
 }
 
-function eraserMouseUp(){
-    eraserOn = false
+//Remove drawEventListener
+function removePenEventListener(){
+    grid.addEventListener('mousedown', testDrawMouseDown)
+    window.addEventListener('mouseup', testDrawMouseUp)
+    canvas.forEach(element => {
+        element.removeEventListener('mouseenter',testDrawMouseMove)
+    });
 }
 
-function eraserMouseLeave(){
-    eraserOn = false
+//Remove EraserEventListene
+function removeEraserEventListener(){
+    canvas.forEach(element => {
+        element.removeEventListener('mouseenter', testEraserMouseDown)
+    });
 }
-
-function pen(){
+function draw(){
     grid.style.cursor = "url('static/icons/Pictogrammers-Material-Light-Pencil.16.png'), pointer"
-    function draw(){
-        canvas.forEach(block => {
-         block.addEventListener('mousedown', drawMouseDown)
-         block.addEventListener('mousemove', drawMouseMove)
-         block.addEventListener('mouseup', drawMouseUp)
-         reset.addEventListener('click', function(){
-            isDrawing = false
-            canvas.forEach(block => {
-                block.removeEventListener('mousedown', drawMouseDown)
-                block.removeEventListener('mouseup', drawMouseUp)
-                block.removeEventListener('mousemove', drawMouseMove)
-            })
-         })
-         eraser.addEventListener('click', function(){
-            isDrawing = false
-            canvas.forEach(block => {
-                block.removeEventListener('mousedown', drawMouseDown)
-                block.removeEventListener('mouseup', drawMouseUp)
-                block.removeEventListener('mousemove', drawMouseMove)
-            })
-         })
-        });
-        grid.addEventListener('mouseleave',drawMouseLeave)
-    }
-    draw()
+    drawMode = true
+    grid.addEventListener('mousedown', testDrawMouseDown)
+    window.addEventListener('mouseup', testDrawMouseUp)
+    canvas.forEach(element => {
+        element.addEventListener('mouseenter',testDrawMouseMove)
+    });
+    eraser.addEventListener('click',removePenEventListener)  
 }
 
 function erase(){
     grid.style.cursor = "url('static/icons/draw-eraser-icon.png'), pointer"
-    function eraseBlock(){
-        canvas.forEach(block => {
-            block.addEventListener('mousedown', eraserMouseDown)
-            block.addEventListener('mousemove',eraserMouseMove)
-            block.addEventListener('mouseup', eraserMouseUp)
-            reset.addEventListener('click', function(){
-                eraserOn = false
-                canvas.forEach(block => {
-                    block.removeEventListener('mousedown', eraserMouseDown)
-                    block.removeEventListener('mousemove', eraserMouseMove)
-                    block.removeEventListener('mouseup', eraserMouseUp)
-                });
-            })
-            penButton.addEventListener('click', function(){
-                eraserOn = false
-                canvas.forEach(block => {
-                    block.removeEventListener('mousedown', eraserMouseDown)
-                    block.removeEventListener('mousemove', eraserMouseMove)
-                    block.removeEventListener('mouseup', eraserMouseUp)
-                });
-            })
-        });
-        grid.addEventListener('mouseleave',eraserMouseLeave)   
-    }
-    eraseBlock()
+    drawMode = false
+    canvas.forEach(element => {
+        element.addEventListener('mouseenter',testEraserMouseDown)
+    });
+    penButton.addEventListener('click', eraser)
+    
 }
 
 //logic for reset
@@ -235,8 +206,11 @@ function setInitial(){
     grid.style.backgroundColor = 'white'
     rangeSlider.value = '16';
     rangeSlider.dispatchEvent(new Event('input'));
-    isDrawing = false
-    eraserOn = false
+    isMouseDown = undefined
+    drawMode = undefined
+    grid.style.cursor = "auto"
+    reset.addEventListener('click',testRemoveDrawEventListener)
+    reset.addEventListener('click',removeEraserEventListener)
 }
 
 //logic for toggling different colors
@@ -245,8 +219,14 @@ document.getElementById('color').addEventListener('input', function chooseColor(
 })
 
 rangeSlider.addEventListener('input', updateSlider)
-penButton.addEventListener('click',pen)
+
+//Initialize pen
+penButton.addEventListener('click',draw)
+
+//Initialize eraser
 eraser.addEventListener('click',erase)
+
+//Initialize reset
 reset.addEventListener('click',setInitial)
 document.addEventListener("dragstart", event => {
     event.preventDefault();
@@ -265,4 +245,19 @@ rangeSlider.addEventListener('mouseover', (event) => {
 rangeSlider.addEventListener('mouseout', () => {
     sizeTip.style.visibility = 'hidden';
     sizeTip.style.opacity = '0';
+});
+
+grid.addEventListener("mousedown", (e) => {
+    isMouseDown = true;
+    if (drawMode === true){
+        draw(e);
+    } else if (drawMode === false) {
+        erase(e)
+    } else{
+        ;;
+    }
+});
+
+window.addEventListener("mouseup", () => {
+    isMouseDown = false;
 });
