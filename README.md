@@ -13,4 +13,4 @@ My Etch-a-Sketch project, which is a part of the Odin project foundation curricu
 
 ## To-add:
 - [ ] Rainbow mode
-- [ ] Performance optimization for larger grid
+- [x] Performance optimization for larger grid
